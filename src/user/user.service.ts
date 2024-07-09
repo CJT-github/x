@@ -53,11 +53,12 @@ export class UserService {
     const captcha = svgCaptcha.create({
       size: 4, // captcha length
       ignoreChars: '0o1i', // filter out some characters like 0, o, 1, i
-      noise: 1, // number of noise lines
-      color: true,
+      noise: 2, // number of noise lines
+      color: false,
       width: 150,
       height: 32,
       fontSize: 28,
+      background: '#9a9a9a',
     });
 
     await this.redisService.set(
