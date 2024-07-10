@@ -15,7 +15,7 @@ interface UserInfo {
 
   createTime: number;
 
-  roles: string[];
+  rolesId: number;
 
   permissions: string[];
 }

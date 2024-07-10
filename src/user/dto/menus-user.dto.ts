@@ -34,6 +34,11 @@ export class UpdateMenuDto {
   blank: number;
 
   @IsNotEmpty({
+    message: '是否展示菜单不能为空',
+  })
+  closeMenu: number;
+
+  @IsNotEmpty({
     message: '状态不能为空',
   })
   status: number;
@@ -78,6 +83,11 @@ export class SaveMenuDto {
     message: '是否展示不能为空',
   })
   blank: number;
+
+  @IsNotEmpty({
+    message: '是否展示菜单不能为空',
+  })
+  closeMenu: number;
 
   @IsNotEmpty({
     message: '状态不能为空',

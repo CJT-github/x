@@ -59,7 +59,7 @@ export class UserController {
       {
         userId: vo.userInfo.id,
         username: vo.userInfo.username,
-        roles: vo.userInfo.roles,
+        rolesId: vo.userInfo.rolesId,
         permissions: vo.userInfo.permissions,
       },
       {
@@ -110,7 +110,7 @@ export class UserController {
         {
           userId: user.id,
           username: user.username,
-          roles: user.roles,
+          rolesId: user.rolesId,
           permissions: user.permissions,
         },
         {
@@ -130,20 +130,27 @@ export class UserController {
   //获取菜单
   @SetMetadata('require-login', true)
   @Get('menus')
-  async menus(@Query('role', ParseIntPipe) role: number) {
-    return await this.userService.getMenus(role);
+  async menus(@AuthToken() token: string) {
+    const data = this.jwtService.verify(token.split(' ')[1]);
+    return await this.userService.getMenus(data.rolesId);
   }
 
   //获取菜单
   @SetMetadata('require-login', true)
   @Get('menus-list')
   async menusList(
-    @Query('role') role: number | string,
+    @AuthToken() token: string,
     @Query('level') level: number | string,
     @Query('pid', new DefaultValuePipe(0)) pid: number | string,
     @Query('handle', new DefaultValuePipe('next')) handle: string,
   ) {
-    return await this.userService.getMenusList(role, level, pid, handle);
+    const data = this.jwtService.verify(token.split(' ')[1]);
+    return await this.userService.getMenusList(
+      data.rolesId,
+      level,
+      pid,
+      handle,
+    );
   }
 
   //更新菜单
@@ -174,7 +181,6 @@ export class UserController {
   @SetMetadata('require-login', true)
   @Get('delete-menus')
   async deleteMenu(@Query('id') id: number | string) {
-    console.log(id);
     return 'success';
   }
 

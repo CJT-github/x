@@ -97,7 +97,6 @@ export class UserService {
     if (user.password !== md5(loginUserDto.password)) {
       throw new HttpException('密码错误', HttpStatus.BAD_REQUEST);
     }
-
     const vo = new LoginUserVo();
     vo.userInfo = {
       id: user.id,
@@ -108,7 +107,7 @@ export class UserService {
       createTime: user.createTime.getTime(),
       isFrozen: user.isFrozen,
       isAdmin: user.isAdmin,
-      roles: user.roles.map((item) => item.name),
+      rolesId: user.roles.map((item) => item.id)[0],
       permissions: user.roles.reduce((arr, item) => {
         item.permissions.forEach((permission) => {
           if (arr.indexOf(permission) === -1) {
@@ -147,7 +146,7 @@ export class UserService {
       id: user.id,
       username: user.username,
       isAdmin: user.isAdmin,
-      roles: user.roles.map((item) => item.name),
+      rolesId: user.roles.map((item) => item.id)[0],
       permissions: user.roles.reduce((arr, item) => {
         item.permissions.forEach((permission) => {
           if (arr.indexOf(permission) === -1) {
@@ -201,9 +200,6 @@ export class UserService {
 
   //获取菜单列表
   async getMenus(role: number) {
-    if (!role) {
-      throw new HttpException('请携带角色参数', HttpStatus.BAD_REQUEST);
-    }
     const roles = await this.rolesRepository.query(
       `SELECT * FROM menus WHERE id in (SELECT menusId as mId FROM role_menus rm WHERE rm.rolesId = ${role}) AND status = 1 ORDER BY level ASC,sort ASC`,
     );
@@ -220,6 +216,7 @@ export class UserService {
         menuKey,
         icon,
         blank,
+        closeMenu,
         pid,
         level,
         sort,
@@ -233,6 +230,7 @@ export class UserService {
         menuKey,
         icon,
         blank,
+        closeMenu,
         pid,
         level,
         sort,
@@ -281,6 +279,7 @@ export class UserService {
         menuKey,
         icon,
         blank,
+        closeMenu,
         pid,
         level,
         status,
@@ -294,6 +293,7 @@ export class UserService {
         routerPath,
         menuKey,
         blank,
+        closeMenu,
         icon,
         status,
         pid,
@@ -330,6 +330,7 @@ export class UserService {
       menus.icon = menuData.icon;
       menus.sort = menuData.sort;
       menus.blank = Boolean(Number(menuData.blank));
+      menus.closeMenu = Boolean(Number(menuData.closeMenu));
       menus.status = Boolean(Number(menuData.status));
       menus.description = menuData.description;
       menus.byUpdate = username;
@@ -367,6 +368,7 @@ export class UserService {
     menus.level = menuData.level;
     menus.sort = menuData.sort;
     menus.blank = Boolean(Number(menuData.blank));
+    menus.closeMenu = Boolean(Number(menuData.closeMenu));
     menus.status = Boolean(menuData.status);
     menus.description = menuData.description;
     menus.byAdd = username;

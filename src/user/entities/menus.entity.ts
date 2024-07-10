@@ -46,10 +46,16 @@ export class Menus {
   icon: string;
 
   @Column({
-    comment: '是否展示',
+    comment: '是否展示item',
     default: true,
   })
   blank: boolean;
+
+  @Column({
+    comment: '是否展示menu',
+    default: true,
+  })
+  closeMenu: boolean;
 
   @Column({
     comment: '父级id',
